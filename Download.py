@@ -1,6 +1,5 @@
 import requests
 import os
-import Config
 
 global file_path
 
