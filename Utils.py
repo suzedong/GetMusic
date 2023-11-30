@@ -28,6 +28,10 @@
 
 # \033[0m
 
+import os
+import requests
+
+
 def print_colored(text, color_code):
     """
     打印带有颜色的文本。
@@ -55,3 +59,37 @@ def input_colored(prompt, color_code):
     """
     print(f"\033[{color_code}m{prompt}\033[0m", end='')
     return input()
+
+
+def download_file(file_url, author, title, root_dir):
+    """
+    下载文件。
+
+    参数：
+    url (str) -- 文件的URL
+    file_name (str) -- 文件的名称
+
+    返回：
+    无返回值。
+    """
+    response = requests.get(file_url)
+    response.raise_for_status()  # 检查是否下载成功
+
+    # 提取扩展名
+    ext = os.path.splitext(file_url)[1]
+
+    # 构造文件夹名和文件名
+    folder_name = author
+    file_name = f"{author} - {title}{ext}"
+
+    # 创建文件夹（如果不存在）
+    folder_path = os.path.join(root_dir, folder_name)
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+
+    # 下载文件并保存到相应的文件夹中
+    file_path = os.path.join(folder_path, file_name)
+    with open(file_path, 'wb') as file:
+        file.write(response.content)
+
+    return file_path

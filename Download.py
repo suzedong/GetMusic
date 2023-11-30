@@ -1,6 +1,8 @@
 import requests
 import os
 
+import Utils
+
 global file_path
 
 
@@ -27,25 +29,7 @@ def get_file(indexes, data_array, root_dir, page_number):
             title = item['title']
 
             try:
-                response = requests.get(file_url)
-                response.raise_for_status()  # 检查是否下载成功
-
-                # 提取扩展名
-                ext = os.path.splitext(file_url)[1]
-
-                # 构造文件夹名和文件名
-                folder_name = author
-                file_name = f"{author} - {title}{ext}"
-
-                # 创建文件夹（如果不存在）
-                folder_path = os.path.join(root_dir, folder_name)
-                if not os.path.exists(folder_path):
-                    os.makedirs(folder_path)
-
-                # 下载文件并保存到相应的文件夹中
-                file_path = os.path.join(folder_path, file_name)
-                with open(file_path, 'wb') as file:
-                    file.write(response.content)
+                file_path = Utils.download_file(file_url, author, title, root_dir)
 
                 print(f"第{page_number}页-第{index + 1}首-已下载文件: {file_path}")
             except requests.exceptions.HTTPError as e:
