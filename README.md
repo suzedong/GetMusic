@@ -66,6 +66,28 @@ $ your_script_name [arguments]
 通过这些步骤，您可以将您的程序及其相关依赖打包成一个可运行的包，并使其他人能够轻松地安装和运行它。
 
 ## 打包成可在macOS下直接运行的程序
+```shell
+pyinstaller -F --collect-all pyfiglet GetMusic.py 
+pyinstaller -F --windowed --collect-all pyfiglet GetMusicGUI.py
+```
+
+`pyinstaller -F --windowed --collect-all pyfiglet GetMusicGUI.py` 是一个使用 PyInstaller 打包包含 `pyfiglet` 库和 `GetMusicGUI.py` 脚本的命令。
+
+具体解释如下：
+
+- `pyinstaller` 是 PyInstaller 的命令行工具，用于将 Python 脚本打包成可执行文件。
+- `-F` 参数指定将所有依赖项打包到一个单独的可执行文件中，而不是生成多个文件。
+- `--windowed` 参数告诉 PyInstaller 创建一个没有命令行窗口的可执行文件，这意味着它将作为一个 GUI 应用程序运行。
+- `--collect-all` 参数告诉 PyInstaller 收集所有的依赖项，包括那些在代码中动态导入的模块。
+- `pyfiglet` 是要打包的库或模块的名称。
+- `GetMusicGUI.py` 是要打包的 Python 脚本文件的名称。
+
+综合起来，这个命令的目的是将 `GetMusicGUI.py` 脚本及其所有依赖项（包括 `pyfiglet` 库）打包成一个独立的可执行文件。打包后的可执行文件将作为一个没有命令行窗口的 GUI 应用程序运行，可以在适当的操作系统上直接运行，而无需安装 Python 和额外的依赖项。
+
+请确保在执行此命令之前已经安装了 PyInstaller，并在命令行中可以访问到它。此外，你还需要在包含 `GetMusicGUI.py` 脚本的目录中执行此命令，以确保正确地打包所有依赖项。
+
+---
+
 要将Python脚本打包成可在macOS下直接运行的程序，您可以使用`PyInstaller`工具。`PyInstaller`可以将Python脚本打包成独立的可执行文件，其中包含了所需的Python解释器和依赖库。
 
 请按照以下步骤操作：

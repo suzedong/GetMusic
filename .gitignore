@@ -1,28 +1,10 @@
-/GetMusic.spec
 /build
 /dist
 
 .idea
 .vscode
-.env
-.env.local
-.env.development
-.env.production
-.env.test
-.env.development.local
-.env.production.local
-.env.test.local
 
 /__pycache__
-/.pytest_cache
-/.mypy_cache
-/.hypothesis
-/.hypothesis/
-/.hypothesis/examples
-/.hypothesis/output
-/.hypothesis/logs
-/.hypothesis/state
-/.hypothesis/state/
-/.hypothesis/state/hypothesis.state
-/.hypothesis/state/hypothesis.state.gz
-/.hypothesis/state/hypothesis.state.bz2
+
+GetMusic.spec
+GetMusicGUI.spec
