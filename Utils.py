@@ -78,6 +78,8 @@ def download_file(file_url, author, title, root_dir):
     # 提取扩展名
     ext = os.path.splitext(file_url)[1]
 
+    author = author.replace("/", "-")
+    title = title.replace("/", "-")
     # 构造文件夹名和文件名
     folder_name = author
     file_name = f"{author} - {title}{ext}"
