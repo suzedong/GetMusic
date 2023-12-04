@@ -38,8 +38,11 @@ def state_change(state):
 
 def download_music():
     # ...
+    global stop_download
     state_change(tk.DISABLED)
     result_text.delete(1.0, tk.END)
+    stop_download = False
+    stop_event.clear()
     # 创建一个新线程用于下载
     download_thread = threading.Thread(target=download_music_thread)
     download_thread.start()
@@ -110,7 +113,7 @@ input_entry.grid(row=0, column=1)
 
 tk.Label(grid_frame, text="要下载的页号：").grid(row=1, column=0, sticky="e")
 page_entry = tk.Entry(grid_frame)
-page_entry.insert(0, "1,20,3,4,5,6,7,8,9,10")
+page_entry.insert(0, "1,2,3,4,5,6,7,8,9,10")
 page_entry.grid(row=1, column=1)
 
 tk.Label(grid_frame, text="要下载的索引：").grid(row=2, column=0, sticky="e")
