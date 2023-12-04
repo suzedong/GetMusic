@@ -20,9 +20,16 @@ def download_gui(indexes, data_array, root_dir, page_number, result_text, stop_e
             title = item['title']
             try:
                 file_path = Utils.download_file(file_url, author, title, root_dir)
-
                 result_text.insert(tk.END, f"第{page_number}页-第{index + 1}首-已下载文件: {file_path}\n")
                 result_text.see(tk.END)
+
+                # 判断文件大小
+                file_size = os.path.getsize(file_path)
+                if file_size < 3000000:  # 3M
+                    os.remove(file_path)
+                    result_text.insert(tk.END, f"但是文件小于3M已经删除!!!\n", "red")
+                    result_text.see(tk.END)
+
             except requests.exceptions.HTTPError as e:
                 result_text.insert(tk.END, f"第{page_number}页-第{index + 1}首-下载文件失败: {e}", "red")
                 # 删除下载过程中产生的文件
