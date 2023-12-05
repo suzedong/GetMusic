@@ -9,6 +9,7 @@ import GetList
 
 # 创建一个布尔变量来控制下载线程
 stop_download = False
+stop_select = False
 # 创建一个 Event 对象用于控制下载线程
 stop_event = threading.Event()
 
@@ -27,6 +28,12 @@ def stop_download_music():
     state_change(tk.NORMAL)
 
 
+def stop_select_pages():
+    global stop_select
+    stop_select = True
+    select_state_change(tk.NORMAL)
+
+
 def state_change(state):
     input_entry.config(state=state)
     page_entry.config(state=state)
@@ -34,6 +41,52 @@ def state_change(state):
     root_dir_entry.config(state=state)
     select_button.config(state=state)
     start_button.config(state=state)
+
+
+def select_state_change(state):
+    select_pages_button.config(state=state)
+    pages_entry.config(state=state)
+
+
+def select_pages():
+    global stop_select
+    select_state_change(tk.DISABLED)
+    pages_text.delete(1.0, tk.END)
+    stop_select = False
+    # 创建一个新线程用于下载
+    download_thread = threading.Thread(target=select_pages_thread)
+    download_thread.start()
+
+
+def select_pages_thread():
+    input_value = input_entry.get()
+    page_numbers = pages_entry.get()
+    for page_number in range(int(page_numbers)):
+        if stop_select:
+            pages_text.insert(tk.END, f"在第{page_number}页-停止查询!!!\n", "red")
+            pages_text.see(tk.END)
+            # 如果停止按钮被点击，终止下载
+            break
+        pages_text.insert(tk.END, f"开始请求第{page_number + 1}页数据", "bold")
+        pages_text.see(tk.END)
+        data_array = GetList.get_list(input_value, page_number + 1)  # 获取搜索结果
+        pages_text.insert(tk.END, f"->获取到{len(data_array)}条数据\n", "green")
+        pages_text.see(tk.END)
+
+        if len(data_array) > 0:
+            # 显示查询结果
+            index_int = 1
+            for item in data_array:
+                pages_text.insert(tk.END, f"{index_int}.{item['author']} - {item['title']} 来源: {item['type']}\n")
+                index_int += 1
+
+            pages_text.see(tk.END)
+
+    if not stop_select:
+        pages_text.insert(tk.END, f"{page_numbers}页-查询完成!!!\n", "green")
+        pages_text.see(tk.END)
+
+    select_state_change(tk.NORMAL)
 
 
 def download_music():
@@ -128,6 +181,15 @@ input_entry = tk.Entry(grid_frame)
 input_entry.insert(0, "汽车音乐")
 input_entry.grid(row=0, column=1)
 
+select_frame = tk.Frame(grid_frame)
+select_frame.grid(row=0, column=2, sticky="w")
+select_pages_button = tk.Button(select_frame, text="查询", command=select_pages)
+select_pages_button.pack(side="left")
+pages_entry = tk.Spinbox(select_frame, from_=1, to=10, width=2)
+pages_entry.pack(side="left")
+tk.Label(select_frame, text="页").pack(side="left")
+tk.Button(select_frame, text="停止", command=stop_select_pages).pack(side="left")
+
 tk.Label(grid_frame, text="要下载的页号：").grid(row=1, column=0, sticky="e")
 page_entry = tk.Entry(grid_frame)
 page_entry.insert(0, "1,2,3,4,5,6,7,8,9,10")
@@ -146,7 +208,7 @@ root_dir_entry.grid(row=3, column=1)
 
 # 添加文件夹选择按钮
 select_button = tk.Button(grid_frame, text="选择文件夹", command=select_directory)
-select_button.grid(row=3, column=2)
+select_button.grid(row=3, column=2, sticky="w")
 
 # 创建一个框架来容纳按钮
 button_frame = tk.Frame(left_frame)
@@ -174,7 +236,7 @@ result_text.pack(fill="both", expand=True)
 right_frame = tk.Frame(window)
 right_frame.pack(fill="both", expand=True)
 
-tk.Label(right_frame, text="Hello World!-----------------------").pack(side="top", anchor="w", padx=5, pady=5)
+tk.Label(right_frame, text="查询结果:-----------------------").pack(side="top", anchor="w", padx=5, pady=5)
 pages_text = tk.Text(right_frame)
 pages_text.tag_config("bold", font=("Arial", 12, "bold"))
 pages_text.tag_config("red", foreground="red")
