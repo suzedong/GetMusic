@@ -7,6 +7,19 @@ import Utils
 global file_path
 
 
+def check_and_remove_empty_folder(folder_path, result_text):
+    # 检查文件夹是否为空
+    if not os.listdir(folder_path):
+        # 如果为空，删除文件夹
+        os.rmdir(folder_path)
+        result_text.insert(tk.END, f"删除'{folder_path}'文件夹!!!\n", "red")
+        # 同时检查并递归删除父文件夹
+        parent_folder = os.path.dirname(folder_path)
+        if not os.listdir(parent_folder):
+            os.rmdir(parent_folder)
+            result_text.insert(tk.END, f"删除'{folder_path}'文件夹!!!\n", "red")
+
+
 def download_gui(indexes, data_array, root_dir, page_number, result_text, stop_event):
     global file_path
     for index in indexes:
@@ -28,6 +41,9 @@ def download_gui(indexes, data_array, root_dir, page_number, result_text, stop_e
                 if file_size < 3000000:  # 3M
                     os.remove(file_path)
                     result_text.insert(tk.END, f"但是文件小于3M已经删除!!!\n", "red")
+                    # 检查并删除空文件夹
+                    # print(os.path.dirname(file_path))
+                    check_and_remove_empty_folder(os.path.dirname(file_path), result_text)
                     result_text.see(tk.END)
 
             except requests.exceptions.HTTPError as e:
