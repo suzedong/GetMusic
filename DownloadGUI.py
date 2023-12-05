@@ -17,10 +17,10 @@ def check_and_remove_empty_folder(folder_path, result_text):
         parent_folder = os.path.dirname(folder_path)
         if not os.listdir(parent_folder):
             os.rmdir(parent_folder)
-            result_text.insert(tk.END, f"删除'{folder_path}'文件夹!!!\n", "red")
+            result_text.insert(tk.END, f"删除'{parent_folder}'文件夹!!!\n", "red")
 
 
-def download_gui(indexes, data_array, root_dir, page_number, result_text, stop_event):
+def download_gui(indexes, data_array, root_dir, page_number, result_text, stop_event, download_complete_callback=None):
     global file_path
     for index in indexes:
         if stop_event.is_set():
@@ -60,4 +60,7 @@ def download_gui(indexes, data_array, root_dir, page_number, result_text, stop_e
     else:
         # 如果下载完成，显示下载完成的提示
         result_text.insert(tk.END, f"第{page_number}页-下载完成\n", "green")
+        # 如果存在回调函数，并且当前页面是最后一个页面，调用它
+        if download_complete_callback:
+            download_complete_callback()
     result_text.see(tk.END)

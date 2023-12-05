@@ -54,6 +54,13 @@ def download_music_thread():
     index_string = index_entry.get()
     root_dir = root_dir_entry.get()
 
+    # 下载完成后的回调函数，重新启用状态为 DISABLED 的组件
+    def download_complete_callback():
+        print(f"{page_number} == {page_numbers[-1]}")
+        if page_number == page_numbers[-1]:
+            # 如果是最后一个页面，重新启用组件
+            state_change(tk.NORMAL)
+
     # 检查逗号分割的数字字符串
     if ',' in page_value:
         # 将数字字符串拆分成数字列表
@@ -72,7 +79,16 @@ def download_music_thread():
         result_text.insert(tk.END, f"->获取到{len(data_array)}条数据\n", "green")
         result_text.see(tk.END)
 
+        pages_text.insert(tk.END, f"第{page_number}页\n", "green")
         if len(data_array) > 0:
+            # 显示查询结果
+            index_int = 1
+            for item in data_array:
+                pages_text.insert(tk.END, f"{index_int}.{item['author']} - {item['title']} 来源: {item['type']}\n")
+                index_int += 1
+
+            pages_text.see(tk.END)
+
             result_text.insert(tk.END, f"开始下载第{page_number}页数据\n", "bold")
             result_text.see(tk.END)
             # 检查索引字符串是否为 "all"
@@ -82,7 +98,8 @@ def download_music_thread():
                 # 将数字字符串拆分成数字列表，并将索引值减1
                 indexes = [int(index) - 1 for index in index_string.split(',')]
 
-            DownloadGUI.download_gui(indexes, data_array, root_dir, page_number, result_text, stop_event)
+            DownloadGUI.download_gui(indexes, data_array, root_dir, page_number, result_text, stop_event,
+                                     download_complete_callback)
         else:
             result_text.insert(tk.END, f"没有找到第{page_number}页数据\n", "red")
 
@@ -158,7 +175,11 @@ right_frame = tk.Frame(window)
 right_frame.pack(fill="both", expand=True)
 
 tk.Label(right_frame, text="Hello World!-----------------------").pack(side="top", anchor="w", padx=5, pady=5)
-tk.Text(right_frame).pack(side="top", fill="both", expand=True, anchor="w", padx=5, pady=5)
+pages_text = tk.Text(right_frame)
+pages_text.tag_config("bold", font=("Arial", 12, "bold"))
+pages_text.tag_config("red", foreground="red")
+pages_text.tag_config("green", foreground="green")
+pages_text.pack(side="top", fill="both", expand=True, anchor="w", padx=5, pady=5)
 tk.Button(right_frame, text="退出", command=window.destroy).pack(side="bottom", anchor="e", padx=5, pady=5)
 
 # 运行主循环
