@@ -182,6 +182,6 @@ jobs:
         run: |
           ls -l ${{ github.workspace }}
           ls -l artifact
-          tag_name=$(echo "${{ github.ref }}" | rev | cut -d '/' -f 2 | rev)
+          $tag_name = "${{ github.ref }}" -replace '^refs/tags/', ''
           echo "Tag name: $tag_name"
-          gh release upload ${tag_name} artifact\*
+          gh release upload "$tag_name" artifact\*
