@@ -76,5 +76,4 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}
         ls -l artifact
-#        mv artifact/* ${{ github.workspace }} # 将编译好的.app 文件移动到工作流的工作目录下
         gh release upload ${{ github.run_number }} artifact/* # 将编译好的.app 文件上传到 Release
