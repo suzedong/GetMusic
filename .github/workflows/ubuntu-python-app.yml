@@ -65,7 +65,7 @@ jobs:
         ls -l ${{ github.workspace }}
         ls -l dist
         ls -l artifact
-        rename artifact/GetMusicGUI artifact/GetMusicGUI-${{ runner.os }}
+        mv artifact/GetMusicGUI artifact/GetMusicGUI-${{ runner.os }}
 
     - name: Upload .app files to Release
       env:
@@ -115,7 +115,7 @@ jobs:
           ls -l ${{ github.workspace }}
           ls -l dist
           ls -l artifact
-          rename artifact/GetMusicGUI.app artifact/GetMusicGUI-${{ runner.os }}.app
+          mv artifact/GetMusicGUI.app artifact/GetMusicGUI-${{ runner.os }}.app
 
       - name: Upload .app files to Release
         env:
