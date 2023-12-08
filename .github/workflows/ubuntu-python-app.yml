@@ -16,7 +16,6 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -77,3 +76,45 @@ jobs:
         ls -l ${{ github.workspace }}
         ls -l artifact
         gh release upload v0.9.${{ github.run_number }} artifact/* # 将编译好的.app 文件上传到 Release
+
+  upload-macos:
+      needs: build
+      runs-on: macos-latest
+
+      steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyfiglet tk pyinstaller
+
+      - name: Compile and pack
+        run: |
+          pyinstaller -F --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
+          ls -l dist
+
+      - name: Archive .app files # 将编译好的.app 文件上传到工作流的输出中
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: GetMusicGUI-${{ runner.os }} # 上传的文件名
+          path: dist/* # 上传的文件路径
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: GetMusicGUI-${{ runner.os }}
+          path: artifact
+
+      - name: Upload .app files to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          ls -l artifact
+          gh release upload v0.9.${{ github.run_number }} artifact/*
