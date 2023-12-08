@@ -41,6 +41,12 @@ def state_change(state):
     root_dir_entry.config(state=state)
     select_button.config(state=state)
     start_button.config(state=state)
+    radiobutton_pages0.config(state=state)
+    radiobutton_pages1.config(state=state)
+    select_pages_button.config(state=state)
+    pages_entry.config(state=state)
+    p_label.config(state=state)
+    stop_select_button.config(state=state)
 
 
 def select_state_change(state):
@@ -56,6 +62,34 @@ def select_pages():
     # 创建一个新线程用于下载
     download_thread = threading.Thread(target=select_pages_thread)
     download_thread.start()
+
+
+def radiobutton_pages():
+    # print(radiobutton_pages_var.get())
+    entry_var = tk.StringVar()
+    if radiobutton_pages_var.get() == 0:  # 单选
+        text_var.set("1")
+        page_entry.config(from_=1, to=99, width=2, textvariable=text_var)
+        pages_label.config(text="要下载的页号：")
+        # index_entry.delete(0, tk.END)
+        # index_entry.insert(0, "1,3,5")
+        entry_var.set("1,3,5")
+        index_entry.config(textvariable=entry_var)
+        index_entry.config(state=tk.NORMAL)
+    elif radiobutton_pages_var.get() == 1:  # 多选
+        text_var.set("10")
+        page_entry.config(from_=2, to=99, width=2, textvariable=text_var)
+        pages_label.config(text=f"从1-{page_entry.get()}页下载：")
+        # index_entry.delete(0, tk.END)
+        # index_entry.insert(0, "all")
+        entry_var.set("all")
+        index_entry.config(textvariable=entry_var)
+        index_entry.config(state=tk.DISABLED)
+
+
+def spinbox_page():
+    if radiobutton_pages_var.get() == 1:  # 多选
+        pages_label.config(text=f"从1-{page_entry.get()}页下载：")
 
 
 def select_pages_thread():
@@ -103,7 +137,12 @@ def download_music():
 
 def download_music_thread():
     input_value = input_entry.get()
-    page_value = page_entry.get()
+
+    if radiobutton_pages_var.get() == 1:
+        page_value = ','.join(str(i) for i in range(1, int(page_entry.get()) + 1))
+    else:
+        page_value = page_entry.get()
+
     index_string = index_entry.get()
     root_dir = root_dir_entry.get()
 
@@ -187,13 +226,28 @@ select_pages_button = tk.Button(select_frame, text="查询", command=select_page
 select_pages_button.pack(side="left")
 pages_entry = tk.Spinbox(select_frame, from_=1, to=10, width=2)
 pages_entry.pack(side="left")
-tk.Label(select_frame, text="页").pack(side="left")
-tk.Button(select_frame, text="停止", command=stop_select_pages).pack(side="left")
+p_label = tk.Label(select_frame, text="页")
+p_label.pack(side="left")
+stop_select_button = tk.Button(select_frame, text="停止", command=stop_select_pages)
+stop_select_button.pack(side="left")
 
-tk.Label(grid_frame, text="要下载的页号：").grid(row=1, column=0, sticky="e")
-page_entry = tk.Entry(grid_frame)
-page_entry.insert(0, "1,2,3,4,5,6,7,8,9,10")
-page_entry.grid(row=1, column=1)
+pages_label = tk.Label(grid_frame, text="从1-10页下载：")
+pages_label.grid(row=1, column=0, sticky="e")
+# page_entry = tk.Entry(grid_frame,)
+# page_entry.insert(0, "1,2,3,4,5,6,7,8,9,10")
+text_var = tk.StringVar()
+text_var.set("10")
+page_entry = tk.Spinbox(grid_frame, from_=2, to=99, width=2, textvariable=text_var, command=spinbox_page)
+page_entry.grid(row=1, column=1, sticky="w")
+radiobutton_frame = tk.Frame(grid_frame)
+radiobutton_frame.grid(row=1, column=2, sticky="w")
+radiobutton_pages_var: tk.IntVar = tk.IntVar(value=1)
+radiobutton_pages1 = tk.Radiobutton(radiobutton_frame, text="多页", variable=radiobutton_pages_var, value=1,
+                                    command=radiobutton_pages)
+radiobutton_pages1.pack(side="left")
+radiobutton_pages0 = tk.Radiobutton(radiobutton_frame, text="单页", variable=radiobutton_pages_var, value=0,
+                                    command=radiobutton_pages)
+radiobutton_pages0.pack(side="left")
 
 tk.Label(grid_frame, text="要下载的索引：").grid(row=2, column=0, sticky="e")
 index_entry = tk.Entry(grid_frame)
