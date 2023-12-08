@@ -62,15 +62,18 @@ jobs:
       uses: actions/download-artifact@v3.0.2
       with:
         name: GetMusicGUI-${{ runner.os }}
-        path: dist
+        path: artifact
 
     - name: List files in workspace
-      run: ls -l ${{ github.workspace }}
+      run: |
+        ls -l ${{ github.workspace }}
+        ls -l dist
+        ls -l artifact
 
     - name: Upload .app files to Release
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
-        ls -l dist
-        mv dist/* ${{ github.workspace }} # 将编译好的.app 文件移动到工作流的工作目录下
-        gh release upload ${{ github.run_number }} dist/* # 将编译好的.app 文件上传到 Release
+        ls -l artifact
+#        mv artifact/* ${{ github.workspace }} # 将编译好的.app 文件移动到工作流的工作目录下
+        gh release upload ${{ github.run_number }} artifact/* # 将编译好的.app 文件上传到 Release
