@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
 
     steps:
     - name: Checkout Repository
@@ -76,4 +76,4 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}
         ls -l artifact
-        gh release upload ${{ github.run_number }} artifact/* # 将编译好的.app 文件上传到 Release
+        gh release upload v0.9.${{ github.run_number }} artifact/* # 将编译好的.app 文件上传到 Release
