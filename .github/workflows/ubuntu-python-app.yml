@@ -6,11 +6,13 @@ name: Python application
 on:
   push: # 将工作流设置为在将事件推送到 main and release/* 分支时运行
     branches: [ "main" ]
+#    tags:
+#      - v*
   pull_request: # 将工作流设置为在面向 main 分支的事件上运行 pull_request
       branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -35,19 +37,19 @@ jobs:
       run: |
         pyinstaller -F --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1.1.4
-      env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      with:
-        tag_name: v0.9.${{ github.run_number }}
-        release_name: Release v0.9.${{ github.run_number }}
-        draft: false
-        prerelease: false
+#    - name: Create Release
+#      id: create_release
+#      uses: actions/create-release@v1.1.4
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+#      with:
+#        tag_name: v0.9.${{ github.run_number }}
+#        release_name: Release v0.9.${{ github.run_number }}
+#        draft: false
+#        prerelease: false
 
-    - name: Upload .app file to Release
-      uses: actions/upload-artifact@v2
+    - uses: ncipollo/release-action@v1.13.0
       with:
-        name: app
-        path: /home/runner/work/GetMusic/GetMusic/dist/*.app
+        artifacts: "release.tar.gz,dist/*.app"
+#        bodyFile: "body.md"
+        token: ${{ secrets.ACCESS_TOKEN }}
