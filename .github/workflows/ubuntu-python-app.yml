@@ -37,7 +37,7 @@ jobs:
       with:
         files: |
           dist/*.tar.gz
-          dist/*.whl
+          # dist/*.whl
         token: ${{ secrets.ACCESS_TOKEN }}
         release_name: Release ${{ github.run_number }}
         draft: false
