@@ -132,7 +132,7 @@ jobs:
           ls -l ${{ github.workspace }}
           ls -l artifact
           tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
-          gh release upload v0.9.${tag_name} artifact/*
+          gh release upload ${tag_name} artifact/*
 
   upload-windows:
     needs: build
@@ -182,5 +182,5 @@ jobs:
         run: |
           ls -l ${{ github.workspace }}
           ls -l artifact
-          tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          tag_name=$(echo "${{ github.ref }}" -replace '^refs/tags/', '')
           gh release upload v0.9.${tag_name} artifact\*
