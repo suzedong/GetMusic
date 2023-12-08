@@ -5,11 +5,11 @@ name: Python application
 
 on:
   push: # 将工作流设置为在将事件推送到 main and release/* 分支时运行
-    branches: [ "main" ]
-#    tags:
-#      - v*
-  pull_request: # 将工作流设置为在面向 main 分支的事件上运行 pull_request
-      branches: [ "main" ]
+#    branches: [ "main" ]
+    tags:
+      - v*
+#  pull_request: # 将工作流设置为在面向 main 分支的事件上运行 pull_request
+#      branches: [ "main" ]
 
 permissions:
   contents: write
@@ -45,12 +45,13 @@ jobs:
 
     - name: Create Release
       id: create_release
+      if: startsWith(github.ref, 'refs/tags/')
       uses: actions/create-release@v1.1.4
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       with:
-        tag_name: v0.9.${{ github.run_number }}
-        release_name: Release v0.9.${{ github.run_number }}
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
 
@@ -68,12 +69,13 @@ jobs:
         mv artifact/GetMusicGUI artifact/GetMusicGUI-${{ runner.os }}
 
     - name: Upload .app files to Release
+      if: startsWith(github.ref, 'refs/tags/')
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       run: |
         ls -l ${{ github.workspace }}
         ls -l artifact
-        gh release upload v0.9.${{ github.run_number }} artifact/*
+        gh release upload ${{ github.ref }} artifact/*
 
   upload-macos:
       needs: build
@@ -122,6 +124,7 @@ jobs:
           ls -l artifact
 
       - name: Upload .app files to Release
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
@@ -171,9 +174,10 @@ jobs:
           ls -l artifact
 
       - name: Upload .app files to Release
+        if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
           ls -l ${{ github.workspace }}
           ls -l artifact
-          gh release upload v0.9.${{ github.run_number }} artifact/*
+          gh release upload v0.9.${{ github.run_number }} artifact\*
