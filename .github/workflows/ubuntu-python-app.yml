@@ -51,6 +51,6 @@ jobs:
     - uses: ncipollo/release-action@v1.13.0
       with:
         tag: v0.9.${{ github.run_number }}
-        artifacts: "release.tar.gz,dist/*.app"
+        artifacts: "dist/*"
 #        bodyFile: "body.md"
         token: ${{ secrets.ACCESS_TOKEN }}
