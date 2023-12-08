@@ -20,13 +20,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Query version number
-      id: qet_version
-      shell: bash
-      run: |
-        echo "Version number is ${GITHUB_REF:10}"
-        echo ::set-output name=version::"${GITHUB_REF:10}"
-
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -48,9 +41,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
       with:
-        tag_name: v${{ steps.qet_version.outputs.version }}
-        release_name: Release v${{ steps.qet_version.outputs.version }}
-        body: 'See the assets to download this version and install.'
+        tag_name: v0.9.${{ github.run_number }}
+        release_name: Release v0.9.${{ github.run_number }}
         draft: false
         prerelease: false
 
@@ -58,4 +50,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: app
-        path: /path/to/your/app/file/*.app
+        path: /dist/*.app
