@@ -38,7 +38,7 @@ jobs:
         files: |
           dist/*.tar.gz
           dist/*.whl
-        token: ${{ secrets.SZD }}
+        token: ${{ secrets.ACCESS_TOKEN }}
         release_name: Release ${{ github.run_number }}
         draft: false
         prerelease: false
