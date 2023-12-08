@@ -26,9 +26,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pyfiglet tk
+        pip install pyfiglet tk pyinstaller
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
+    - name: Compile and pack
       run: |
         pyinstaller -F --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
     - name: Test with pytest
