@@ -75,7 +75,8 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}
         ls -l artifact
-        gh release upload ${{ github.ref }} artifact/*
+        tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+        gh release upload ${tag_name} artifact/*
 
   upload-macos:
       needs: build
@@ -130,7 +131,8 @@ jobs:
         run: |
           ls -l ${{ github.workspace }}
           ls -l artifact
-          gh release upload v0.9.${{ github.run_number }} artifact/*
+          tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          gh release upload v0.9.${tag_name} artifact/*
 
   upload-windows:
     needs: build
@@ -180,4 +182,5 @@ jobs:
         run: |
           ls -l ${{ github.workspace }}
           ls -l artifact
-          gh release upload v0.9.${{ github.run_number }} artifact\*
+          tag_name=$(echo "${{ github.ref }}" | sed 's/refs\/tags\///')
+          gh release upload v0.9.${tag_name} artifact\*
