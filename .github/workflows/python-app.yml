@@ -175,6 +175,7 @@ jobs:
           ls -l dist
           ls -l artifact
           mv artifact/GetMusicGUI.exe artifact/GetMusicGUI-${{ runner.os }}.exe
+          ls -l artifact
 
       - name: Upload .app files to Release
         if: startsWith(github.ref, 'refs/tags/')
