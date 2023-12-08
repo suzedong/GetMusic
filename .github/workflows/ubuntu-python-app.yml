@@ -64,6 +64,9 @@ jobs:
         name: GetMusicGUI-${{ runner.os }}
         path: dist
 
+    - name: List files in workspace
+      run: ls -l ${{ github.workspace }}
+
     - name: Upload .app files to Release
       env:
         GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
