@@ -16,10 +16,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
@@ -40,11 +37,11 @@ jobs:
         pyinstaller -F --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
         ls -l dist
 
-    - name: Archive .app files # 将编译好的.app 文件上传到工作流的输出中
+    - name: Archive .app files
       uses: actions/upload-artifact@v3.1.3
       with:
-        name: GetMusicGUI-${{ runner.os }} # 上传的文件名
-        path: dist/* # 上传的文件路径
+        name: GetMusicGUI-${{ runner.os }}
+        path: dist/GetMusicGUI
 
     - name: Create Release
       id: create_release
@@ -68,6 +65,7 @@ jobs:
         ls -l ${{ github.workspace }}
         ls -l dist
         ls -l artifact
+        rename artifact/GetMusicGUI artifact/GetMusicGUI-${{ runner.os }}
 
     - name: Upload .app files to Release
       env:
@@ -75,7 +73,7 @@ jobs:
       run: |
         ls -l ${{ github.workspace }}
         ls -l artifact
-        gh release upload v0.9.${{ github.run_number }} artifact/* # 将编译好的.app 文件上传到 Release
+        gh release upload v0.9.${{ github.run_number }} artifact/*
 
   upload-macos:
       needs: build
@@ -100,11 +98,11 @@ jobs:
           pyinstaller -F --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
           ls -l dist
 
-      - name: Archive .app files # 将编译好的.app 文件上传到工作流的输出中
+      - name: Archive .app files
         uses: actions/upload-artifact@v3.1.3
         with:
-          name: GetMusicGUI-${{ runner.os }} # 上传的文件名
-          path: dist/* # 上传的文件路径
+          name: GetMusicGUI-${{ runner.os }}
+          path: dist/GetMusicGUI.app
 
       - name: Download artifacts
         uses: actions/download-artifact@v2
@@ -112,9 +110,17 @@ jobs:
           name: GetMusicGUI-${{ runner.os }}
           path: artifact
 
+      - name: List files in workspace
+        run: |
+          ls -l ${{ github.workspace }}
+          ls -l dist
+          ls -l artifact
+          rename artifact/GetMusicGUI.app artifact/GetMusicGUI-${{ runner.os }}.app
+
       - name: Upload .app files to Release
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: |
+          ls -l ${{ github.workspace }}
           ls -l artifact
           gh release upload v0.9.${{ github.run_number }} artifact/*
