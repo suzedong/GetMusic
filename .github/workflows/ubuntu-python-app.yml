@@ -31,6 +31,20 @@ jobs:
     - name: Compile and pack
       run: |
         pyinstaller -F --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
-    - name: Test with pytest
-      run: |
-        pytest
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        files: |
+          dist/*.tar.gz
+          dist/*.whl
+        token: ${{ secrets.SZD }}
+        release_name: Release ${{ github.run_number }}
+        draft: false
+        prerelease: false
+
+    - name: Upload .app file to Release
+      uses: actions/upload-artifact@v2
+      with:
+        name: app
+        path: /path/to/your/app/file/*.app
