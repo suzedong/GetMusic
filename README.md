@@ -70,6 +70,7 @@ $ your_script_name [arguments]
 pyinstaller -F --collect-all pyfiglet GetMusic.py 
 pyinstaller -F --windowed --collect-all pyfiglet GetMusicGUI.py
 pyinstaller -F --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
+pyinstaller -F --icon=AppIcon.appiconset/512.png --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
 ```
 
 `pyinstaller -F --windowed --collect-all pyfiglet GetMusicGUI.py` 是一个使用 PyInstaller 打包包含 `pyfiglet` 库和 `GetMusicGUI.py` 脚本的命令。

@@ -205,7 +205,7 @@ title_frame = tk.Frame(window)
 title_frame.pack(anchor="nw")
 # 创建标题
 tk.Label(title_frame, text=pyfiglet.figlet_format("BreakDay"), font=("Courier", 20)).pack(side="left")
-tk.Label(title_frame, text=pyfiglet.figlet_format(" - GetMusic v0.9.4"), font=("Courier", 12)).pack(side="left", anchor="s")
+tk.Label(title_frame, text=pyfiglet.figlet_format(" - GetMusic v0.9.5"), font=("Courier", 12)).pack(side="left", anchor="s")
 
 # left_frame--------
 left_frame = tk.Frame(window)
