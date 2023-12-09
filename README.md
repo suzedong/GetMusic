@@ -187,3 +187,23 @@ pyinstaller --onefile your_script_name.py
     ```
 请注意，以上示例代码只是提供了一个基本的框架，你需要根据你的具体需求进行适当的修改和完善。此外，自动更新涉及到网络请求、文件操作等敏感操作，因此要确保代码的安全性和稳定性，以及适当的错误处理和异常处理。
 
+```bash
+mkdir MyIcon.iconset
+sips -z 16 16     1024.png --out MyIcon.iconset/icon_16x16.png
+sips -z 32 32     1024.png --out MyIcon.iconset/icon_16x16@2x.png
+sips -z 32 32     1024.png --out MyIcon.iconset/icon_32x32.png
+sips -z 64 64     1024.png --out MyIcon.iconset/icon_32x32@2x.png
+sips -z 128 128   1024.png --out MyIcon.iconset/icon_128x128.png
+sips -z 256 256   1024.png --out MyIcon.iconset/icon_128x128@2x.png
+sips -z 256 256   1024.png --out MyIcon.iconset/icon_256x256.png
+sips -z 512 512   1024.png --out MyIcon.iconset/icon_256x256@2x.png
+sips -z 512 512   1024.png --out MyIcon.iconset/icon_512x512.png
+cp 1024.png MyIcon.iconset/icon_512x512@2x.png
+iconutil -c icns MyIcon.iconset
+rm -R MyIcon.iconset
+```
+
+```bash
+brew install icoutils
+icotool -c -o MyIco.ico 1024.png
+```

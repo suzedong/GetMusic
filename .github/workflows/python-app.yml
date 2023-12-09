@@ -102,7 +102,7 @@ jobs:
       - name: Compile and pack
         run: |
           pyinstaller -F --collect-all pyfiglet GetMusic.py
-          pyinstaller -F --icon=AppIcon.appiconset/512.png --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
+          pyinstaller -F --icon=AppIcon.appiconset/MyIcon.icns --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
           ls -l dist
 
       - name: Archive .app files
@@ -160,7 +160,7 @@ jobs:
       - name: Compile and pack
         run: |
           pyinstaller -F --collect-all pyfiglet GetMusic.py
-          pyinstaller -F --icon=AppIcon.appiconset/512.png --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
+          pyinstaller -F --icon=AppIcon.appiconset/MyIco.ico --noconfirm --windowed --collect-all pyfiglet GetMusicGUI.py
           ls -l dist
 
       - name: Archive .app files
