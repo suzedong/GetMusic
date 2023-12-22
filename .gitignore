@@ -8,3 +8,5 @@
 
 GetMusic.spec
 GetMusicGUI.spec
+poetry.lock
+pyproject.toml
