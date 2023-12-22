@@ -3,10 +3,8 @@
 一个简单的爬虫，可以爬取网易云音乐的歌曲，并下载到本地。
 
 ## 依赖
-requests
-sys
-os
-pyfiglet
+* requests
+* pyfiglet
 
 ## 使用
 ``` 
